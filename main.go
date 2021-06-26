@@ -39,18 +39,7 @@ func recursionPrintService(prependingString string, output io.Writer, currDir st
 	if err != nil {
 		log.Fatalf("Could not read dir names in %s: %s", currDir, err.Error())
 	}
-	var filesMap map[string]os.FileInfo = map[string]os.FileInfo{}
-	var unSortedFilesNameArr []string = []string{}
-	for _, file := range files {
-		unSortedFilesNameArr = append(unSortedFilesNameArr, file.Name())
-		filesMap[file.Name()] = file
-	}
-	sort.Strings(unSortedFilesNameArr)
-	var sortedFilesArr []os.FileInfo = []os.FileInfo{}
-	for _, stringName := range unSortedFilesNameArr {
-		sortedFilesArr = append(sortedFilesArr, filesMap[stringName])
-	}
-	files = sortedFilesArr
+	files = sortFiles(files)
 	var newFileList []os.FileInfo = []os.FileInfo{}
 	var length int
 	if !printFiles {
@@ -90,4 +79,19 @@ func recursionPrintService(prependingString string, output io.Writer, currDir st
 			}
 		}
 	}
+}
+
+func sortFiles(files []os.FileInfo) (sortedFilesArr []os.FileInfo) {
+	var filesMap map[string]os.FileInfo = map[string]os.FileInfo{}
+	var unSortedFilesNameArr []string = []string{}
+	for _, file := range files {
+		unSortedFilesNameArr = append(unSortedFilesNameArr, file.Name())
+		filesMap[file.Name()] = file
+	}
+	sort.Strings(unSortedFilesNameArr)
+	//var sortedFilesArr []os.FileInfo = []os.FileInfo{}
+	for _, stringName := range unSortedFilesNameArr {
+		sortedFilesArr = append(sortedFilesArr, filesMap[stringName])
+	}
+	return sortedFilesArr
 }
